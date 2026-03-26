@@ -1,12 +1,18 @@
 import pyxel
 
-def update():
-    pass
+class app:
+    def __init__(self):
+        pyxel.init(160, 120, title="Formula26")
+        pyxel.run(self.update, self.draw)
 
-def draw():
-    pyxel.cls(0)
-    pyxel.text(60, 40, "Formula 26", 8)
-    pyxel.text(40, 50, "A Speed Manager Game", 6)
+    def update(self):
+        if pyxel.btnp(pyxel.KEY_Q):
+            pyxel.quit()
 
-pyxel.init(160, 120, title="Formula26")
-pyxel.run(update, draw)
+    def draw(self):
+        pyxel.cls(7)
+        pyxel.text(50, 50, "Formula 26", 8)
+        pyxel.text(50, 60, "A speed manager game", 6)
+
+app()
+

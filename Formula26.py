@@ -48,6 +48,10 @@ DRIVER_GROUPS = {
 def limpar_tela():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+def gerar_clima():
+    clima = random.choice(['☀️', '☀️', '☀️', '☀️', '🌧️', '⛈️'])
+    return clima
+clima = gerar_clima()
 
 def imprimir_pista(horses, turbo_flags=None, pilot_flags=None):
     # Ordenar por posição decrescente (quem estiver na frente primeiro)
@@ -115,29 +119,43 @@ def simular_corrida(num_horses=5, max_rounds=52):
             elif step == 5:
                 step = DRIVER[TEAMS[i]]
             elif step == 1:
-                if random.random() < 0.30:
-                    step = 8  # tiro rápido
-                    turbo_flags[i] = True
-                elif random.random() <0.7:
-                    step = 6
-                else:
-                    step = 3
-                    pilot_flags[i] = True
+                sorte = random.random()
+                if clima in ['☀️']:
+                    if sorte < 0.4:
+                        step = 8  # tiro rápido
+                        turbo_flags[i] = True
+                    elif sorte < 0.8:
+                        step = 6
+                    else:
+                        step = 3
+                        pilot_flags[i] = True
+                elif clima in ['🌧️']:
+                    if sorte < 0.7:
+                        step = 6
+                    else:
+                        step = 3
+                        pilot_flags[i] = True
+                elif clima in ['⛈️']:
+                    if sorte < 0.35:
+                        step = 6
+                    else:
+                        step = 3
+                        pilot_flags[i] = True
             horses[i] += step
 
         limpar_tela()
-        print('=== Corrida de Fórmula 1 ===')
-        print(f'Rodada: {round_count}/{max_rounds}')
+        print('=== Fórmula 26 🧙 ===')
+        print(f'Rodada: {round_count}/{max_rounds}     {clima}')
         imprimir_pista(horses, turbo_flags, pilot_flags)
         # Contagem regressiva do tempo decorrido da rodada
         for elapsed in range(int(SLEEP_BETWEEN_TURNS)):
             time.sleep(1)
             limpar_tela()
-            print('=== Corrida de Fórmula 1 ===')
-            rodada_str = f'Rodada: {round_count}/{max_rounds}'
+            print('=== Fórmula 26 🧙 ===')
+            rodada_str = f'Rodada: {round_count}/{max_rounds}     {clima}'
             tempo_str = f'({elapsed+1:d})'
-            # Alinhar relógio a ~80 caracteres da margem esquerda
-            espacos = ' ' * max(0, 80 - len(rodada_str))
+            # Alinhar relógio a ~60 caracteres da margem esquerda
+            espacos = ' ' * max(0, 60 - len(rodada_str))
             print(rodada_str + espacos + tempo_str)
             imprimir_pista(horses, turbo_flags, pilot_flags)
 

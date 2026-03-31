@@ -44,15 +44,22 @@ DRIVER_GROUPS = {
     'WINNER': ['WIL', 'HAA', 'ALP', 'CAD'],
     'NONE': ['RBV', 'AUD', 'APX'],
 }
-
-def limpar_tela():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
+# Clima:
 def gerar_clima():
     clima = random.choice(['☀️', '☀️', '☀️', '☀️', '🌧️', '⛈️'])
     return clima
 clima = gerar_clima()
 
+# Pista Dominante:
+def pista_dominante():
+    pista = random.choice(['Rua', 'Misto', 'Técnico', 'Rápido', 'Lento', 'escorregadio'])
+    return pista
+pista = pista_dominante()
+
+def limpar_tela():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+# Função para imprimir a pista de corrida
 def imprimir_pista(horses, turbo_flags=None, pilot_flags=None):
     # Ordenar por posição decrescente (quem estiver na frente primeiro)
     sorted_horses = sorted(enumerate(horses), key=lambda x: x[1], reverse=True)
@@ -68,7 +75,7 @@ def imprimir_pista(horses, turbo_flags=None, pilot_flags=None):
             carro = '🏎️ 💨'
         if pilot_flags and pilot_flags[idx]:
             carro = '🏎️  ⚠️'  # Símbolo de aviso
-
+        
         linha = '[ ' + ficam + carro + ' ]'  # barra fixa, espaço extra por diferença
         if rank == 1:
             marcador = ' (Líder)'
@@ -83,7 +90,7 @@ def imprimir_pista(horses, turbo_flags=None, pilot_flags=None):
                 marcador = f' (-{diff})'
         print(f'  {rank:>2}. {TEAMS[idx]:>3} {linha}{marcador}')
 
-
+# Função para escolher a aposta do jogador
 def escolher_aposta(num_horses):
     print("Equipes disponíveis:")
     for i, team in enumerate(TEAMS):
@@ -98,7 +105,7 @@ def escolher_aposta(num_horses):
             return escolha - 1
         print(f'Escolha entre 1 e {num_horses}.')
 
-
+# Função para simular a corrida
 def simular_corrida(num_horses=5, max_rounds=52):
     horses = [0] * num_horses
     round_count = 0
@@ -165,7 +172,7 @@ def simular_corrida(num_horses=5, max_rounds=52):
 
     return winner, horses, round_count
 
-
+# Função para configurar parâmetros de motores, mecânicas, aerodinâmica e pilotos
 def configurar_parametros():
     while True:
         limpar_tela()
@@ -191,7 +198,7 @@ def configurar_parametros():
             print('OPÇÃO INVÁLIDA. PRESSIONE ENTER PARA TENTAR NOVAMENTE.')
             input()
 
-
+# Função para configurar grupos de parâmetros (motores, mecânicas, aerodinâmica, pilotos)
 def configurar_grupo(param_dict, group_dict, nome):
     while True:
         limpar_tela()
@@ -222,7 +229,7 @@ def configurar_grupo(param_dict, group_dict, nome):
             input()
             break
 
-
+# Função principal do jogo
 def main():
     limpar_tela()
     print('Bem-vindo(a) à Corrida de Fórmula 1!')
@@ -238,7 +245,9 @@ Regras:
     aposta = len(TEAMS) - 1  # Sempre aposta em APX (última equipe)
     print(f'Aposta automática na equipe {TEAMS[aposta]}.')
 
-    print("\nMENU INICIAL: DIGITE 'J' PARA INICIAR A CORRIDA, 'C' PARA CONFIGURAÇÕES.")
+    print("\nMENU INICIAL:")
+    print("DIGITE 'J' PARA INICIAR A CORRIDA")
+    print("DIGITE 'C' PARA CONFIGURAÇÕES.")
     while True:
         key = input().strip().upper()
         if key == 'J':
@@ -246,28 +255,37 @@ Regras:
         elif key == 'C':
             configurar_parametros()
             limpar_tela()
-            print('=== RETORNANDO AO MENU INICIAL ===')
-            print("MENU INICIAL: DIGITE 'J' PARA INICIAR A CORRIDA, 'C' PARA CONFIGURAÇÕES.")
+            main()  # Reinicia o jogo após configuração
         else:
-            print("OPÇÃO INVÁLIDA. DIGITE 'J' PARA INICIAR OU 'C' PARA CONFIGURAÇÕES.")
+            print("OPÇÃO INVÁLIDA. PRESSIONE ENTER PARA TENTAR NOVAMENTE.")
+            input()
+            limpar_tela()
+            main()
 
     limpar_tela()
     print('A corrida está prestes a começar!')
-    time.sleep(1)
+    time.sleep(10)
 
     winner, final_positions, round_count = simular_corrida(num_horses, max_rounds=52)
 
-    # Classificar top 3
+    # Classificar top 6 posições
     ranked = sorted(enumerate(final_positions), key=lambda x: x[1], reverse=True)
     first = ranked[0][0]
     second = ranked[1][0]
     third = ranked[2][0]
+    fourth = ranked[3][0]
+    fifth = ranked[4][0]
+    sixth = ranked[5][0]
+
 
     print(f'\n🏁 Classificação final:')
     print(f'1º lugar: {TEAMS[first]} ({final_positions[first]} posições)')
     print(f'2º lugar: {TEAMS[second]} ({final_positions[second]} posições)')
     print(f'3º lugar: {TEAMS[third]} ({final_positions[third]} posições)')
-
+    print(f'4º lugar: {TEAMS[fourth]} ({final_positions[fourth]} posições)')
+    print(f'5º lugar: {TEAMS[fifth]} ({final_positions[fifth]} posições)')
+    print(f'6º lugar: {TEAMS[sixth]} ({final_positions[sixth]} posições)')
+    
     if aposta == first:
         print('\n🎉 Parabéns! Sua aposta ganhou!')
     else:

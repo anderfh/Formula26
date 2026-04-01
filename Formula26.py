@@ -52,9 +52,19 @@ clima = gerar_clima()
 
 # Pista Dominante:
 def pista_dominante():
-    pista = random.choice(['Rua', 'Misto', 'Técnico', 'Rápido', 'Lento', 'escorregadio'])
+    pista = random.choice(['Urbano', 'Misto', 'Técnico', 'Rápido', 'Lento', 'Desafiador'])
     return pista
 pista = pista_dominante()
+
+# Pista x Equipes:
+TRACK_GROUPS = {
+    'Urbano': ['FER', 'HAA'],
+    'Misto': ['RED', 'ALP'],
+    'Técnico': ['AUD', 'APX'],
+    'Rápido': ['MER', 'WIL'],
+    'Lento': ['MCL', 'CAD'],
+    'Desafiador': ['RBV', 'AST']
+}
 
 def limpar_tela():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -129,8 +139,11 @@ def simular_corrida(num_horses=5, max_rounds=52):
                 sorte = random.random()
                 if clima in ['☀️']:
                     if sorte < 0.4:
-                        step = 8  # tiro rápido
-                        turbo_flags[i] = True
+                        if TEAMS[i] in TRACK_GROUPS[pista]:
+                            step = 8  # tiro rápido
+                            turbo_flags[i] = True
+                        else:
+                            step = 6
                     elif sorte < 0.8:
                         step = 6
                     else:
@@ -152,18 +165,20 @@ def simular_corrida(num_horses=5, max_rounds=52):
 
         limpar_tela()
         print('=== Fórmula 26 🧙 ===')
-        print(f'Rodada: {round_count}/{max_rounds}     {clima}')
+        print(f'Rodada: 1/24     Melbourne     {clima}     Circuíto {pista}')
+        print(f'Voltas: {round_count}/{max_rounds}')
         imprimir_pista(horses, turbo_flags, pilot_flags)
         # Contagem regressiva do tempo decorrido da rodada
         for elapsed in range(int(SLEEP_BETWEEN_TURNS)):
             time.sleep(1)
             limpar_tela()
             print('=== Fórmula 26 🧙 ===')
-            rodada_str = f'Rodada: {round_count}/{max_rounds}     {clima}'
+            print(f'Rodada: 1/24     Melbourne     {clima}     Circuíto {pista}')
+            voltas_str = f'Voltas: {round_count}/{max_rounds}'
             tempo_str = f'({elapsed+1:d})'
             # Alinhar relógio a ~60 caracteres da margem esquerda
-            espacos = ' ' * max(0, 60 - len(rodada_str))
-            print(rodada_str + espacos + tempo_str)
+            espacos = ' ' * max(0, 60 - len(voltas_str))
+            print(voltas_str + espacos + tempo_str)
             imprimir_pista(horses, turbo_flags, pilot_flags)
 
     # Determina o vencedor com base em quem estiver mais à frente na rodada final

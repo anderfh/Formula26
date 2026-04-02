@@ -115,6 +115,25 @@ def escolher_aposta(num_horses):
             return escolha - 1
         print(f'Escolha entre 1 e {num_horses}.')
 
+# Função para apresentar o jogo
+def apresentacao():
+    luzes = 0
+    while luzes < 1:
+        limpar_tela()
+        print('=== Fórmula 26 🧙 ===')
+        print('Rodada: 1/24     Melbourne     ' + clima + '     Circuíto ' + pista)
+        print('A corrida está prestes a começar!')
+        time.sleep(5)
+        luzes += 1
+    while luzes < 6:
+        limpar_tela()
+        print('=== Fórmula 26 🧙 ===')
+        print('Rodada: 1/24     Melbourne     ' + clima + '     Circuíto ' + pista)
+        print('A corrida está prestes a começar!')
+        print('🔴' * luzes + '⚪' * (5 - luzes))
+        time.sleep(1)
+        luzes += 1
+
 # Função para simular a corrida
 def simular_corrida(num_horses=5, max_rounds=52):
     horses = [0] * num_horses
@@ -138,7 +157,7 @@ def simular_corrida(num_horses=5, max_rounds=52):
             elif step == 1:
                 sorte = random.random()
                 if clima in ['☀️']:
-                    if sorte < 0.4:
+                    if sorte < 0.5:
                         if TEAMS[i] in TRACK_GROUPS[pista]:
                             step = 8  # tiro rápido
                             turbo_flags[i] = True
@@ -277,9 +296,7 @@ Regras:
             limpar_tela()
             main()
 
-    limpar_tela()
-    print('A corrida está prestes a começar!')
-    time.sleep(10)
+    apresentacao()
 
     winner, final_positions, round_count = simular_corrida(num_horses, max_rounds=52)
 
@@ -294,12 +311,12 @@ Regras:
 
 
     print(f'\n🏁 Classificação final:')
-    print(f'1º lugar: {TEAMS[first]} ({final_positions[first]} posições)')
-    print(f'2º lugar: {TEAMS[second]} ({final_positions[second]} posições)')
-    print(f'3º lugar: {TEAMS[third]} ({final_positions[third]} posições)')
-    print(f'4º lugar: {TEAMS[fourth]} ({final_positions[fourth]} posições)')
-    print(f'5º lugar: {TEAMS[fifth]} ({final_positions[fifth]} posições)')
-    print(f'6º lugar: {TEAMS[sixth]} ({final_positions[sixth]} posições)')
+    print(f'1º lugar: {TEAMS[first]} (12 pontos)')
+    print(f'2º lugar: {TEAMS[second]} (9 pontos)')
+    print(f'3º lugar: {TEAMS[third]} (6 pontos)')
+    print(f'4º lugar: {TEAMS[fourth]} (4 pontos)')
+    print(f'5º lugar: {TEAMS[fifth]} (2 pontos)')
+    print(f'6º lugar: {TEAMS[sixth]} (1 pontos)')
     
     if aposta == first:
         print('\n🎉 Parabéns! Sua aposta ganhou!')

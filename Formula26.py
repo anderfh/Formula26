@@ -4,6 +4,7 @@
 import random
 import time
 import os
+import clima
 
 TRACK_LENGTH = None  # Sem limite máximo de posições
 SLEEP_BETWEEN_TURNS = 10.0
@@ -44,11 +45,6 @@ DRIVER_GROUPS = {
     'WINNER': ['WIL', 'HAA', 'ALP', 'CAD'],
     'NONE': ['RBV', 'AUD', 'APX'],
 }
-# Clima:
-def gerar_clima():
-    clima = random.choice(['☀️', '☀️', '☀️', '☀️', '🌧️', '⛈️'])
-    return clima
-clima = gerar_clima()
 
 # Pista Dominante:
 def pista_dominante():
@@ -115,24 +111,7 @@ def escolher_aposta(num_horses):
             return escolha - 1
         print(f'Escolha entre 1 e {num_horses}.')
 
-# Função para apresentar o jogo
-def apresentacao():
-    luzes = 0
-    while luzes < 1:
-        limpar_tela()
-        print('=== Fórmula 26 🧙 ===')
-        print('Rodada: 1/24     Melbourne     ' + clima + '     Circuíto ' + pista)
-        print('A corrida está prestes a começar!')
-        time.sleep(5)
-        luzes += 1
-    while luzes < 6:
-        limpar_tela()
-        print('=== Fórmula 26 🧙 ===')
-        print('Rodada: 1/24     Melbourne     ' + clima + '     Circuíto ' + pista)
-        print('A corrida está prestes a começar!')
-        print('🔴' * luzes + '⚪' * (5 - luzes))
-        time.sleep(1)
-        luzes += 1
+import apresentacao
 
 # Função para simular a corrida
 def simular_corrida(num_horses=5, max_rounds=52):
@@ -183,16 +162,16 @@ def simular_corrida(num_horses=5, max_rounds=52):
             horses[i] += step
 
         limpar_tela()
-        print('=== Fórmula 26 🧙 ===')
-        print(f'Rodada: 1/24     Melbourne     {clima}     Circuíto {pista}')
+        apresentacao.titulo()
+        apresentacao.apresentar_rodada()
         print(f'Voltas: {round_count}/{max_rounds}')
         imprimir_pista(horses, turbo_flags, pilot_flags)
         # Contagem regressiva do tempo decorrido da rodada
         for elapsed in range(int(SLEEP_BETWEEN_TURNS)):
             time.sleep(1)
             limpar_tela()
-            print('=== Fórmula 26 🧙 ===')
-            print(f'Rodada: 1/24     Melbourne     {clima}     Circuíto {pista}')
+            apresentacao.titulo()
+            apresentacao.apresentar_rodada()
             voltas_str = f'Voltas: {round_count}/{max_rounds}'
             tempo_str = f'({elapsed+1:d})'
             # Alinhar relógio a ~60 caracteres da margem esquerda
@@ -296,7 +275,7 @@ Regras:
             limpar_tela()
             main()
 
-    apresentacao()
+    apresentacao.apresentacao()
 
     winner, final_positions, round_count = simular_corrida(num_horses, max_rounds=52)
 

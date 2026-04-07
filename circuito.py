@@ -1,31 +1,40 @@
+import random
+
+
 circuito = [
     ['teste', 'País', 'Pista', 10],
-    ['Melbourne', '🇦🇺', 'Misto', 58],
-    ['Shanghai', '🇨🇳', 'Desafiador', 56],
-    ['Suzuka', '🇯🇵', 'Técnico', 53],
-    ['Sakhir', '🇧🇭', 'Desafiador', 57],
-    ['Jeddah', '🇸🇦', 'Rápido', 50],
-    ['Miami', '🇺🇸', 'Misto', 57],
-    ['Montreal', '🇨🇦', 'Asfalto', 70],
-    ['Mônaco', '🇲🇨', 'Lento', 78],
-    ['Barcelona', '🇪🇸', 'Asfalto', 66],
-    ['Red Bull Ring', '🇦🇹', 'Asfalto', 71],
-    ['Silverstone', '🇬🇧', 'Técnico', 52],
-    ['Spa-Francorchamps', '🇧🇪', 'Asfalto', 44],
-    ['Hungaroring', '🇭🇺', 'Asfalto', 70],
-    ['Zandvoort', '🇳🇱', 'Asfalto', 72],
-    ['Monza', '🇮🇹', 'Rápido', 53],
-    ['Madrid', '🇪🇸', 'Asfalto', 57],
-    ['Baku', '🇦🇿', 'Asfalto', 51],
-    ['Singapura', '🇸🇬', 'Asfalto', 62],
-    ['COTA', '🇺🇸', 'Asfalto', 56],
-    ['Cidade do México', '🇲🇽', 'Técnico', 71],
-    ['Interlagos', '🇧🇷', 'Asfalto', 58],
-    ['Las Vegas', '🇺🇸', 'Urbano', 58],
-    ['Catar', '🇶🇦', 'Asfalto', 57],
-    ['Abu Dhabi', '🇦🇪', 'Asfalto', 58],
-    ['Sochi', '🇷🇺', 'Asfalto', 58],
-    ['Portimão', '🇵🇹', 'Asfalto', 58],
-    ['Paul Ricard', '🇫🇷', 'Asfalto', 58],
+    ['Melbourne', '🇦🇺', 'M', 58],
+    ['Shanghai', '🇨🇳', 'D', 56],
+    ['Suzuka', '🇯🇵', 'T', 53],
+    ['Sakhir', '🇧🇭', 'D', 57],
+    ['Jeddah', '🇸🇦', 'R', 50],
+    ['Miami', '🇺🇸', 'M', 57],
+    ['Montreal', '🇨🇦', 'U', 70],
+    ['Mônaco', '🇲🇨', 'L', 78],
+    ['Barcelona', '🇪🇸', 'T', 66],
+    ['Red Bull Ring', '🇦🇹', 'M', 71],
+    ['Silverstone', '🇬🇧', 'T', 52],
+    ['Spa-Francorchamps', '🇧🇪', 'R', 44],
+    ['Hungaroring', '🇭🇺', 'D', 70],
+    ['Zandvoort', '🇳🇱', 'T', 72],
+    ['Monza', '🇮🇹', 'R', 53],
+    ['Madrid', '🇪🇸', 'U', 57],
+    ['Baku', '🇦🇿', 'U', 51],
+    ['Singapura', '🇸🇬', 'L', 62],
+    ['COTA', '🇺🇸', 'T', 56],
+    ['Cidade do México', '🇲🇽', 'T', 71],
+    ['Interlagos', '🇧🇷', 'D', 58],
+    ['Las Vegas', '🇺🇸', 'U', 58],
+    ['Catar', '🇶🇦', 'M', 57],
+    ['Abu Dhabi', '🇦🇪', 'L', 58],
+    ['Sochi', '🇷🇺', 'T', 58],
+    ['Portimão', '🇵🇹', 'L', 58],
+    ['Paul Ricard', '🇫🇷', 'R', 58],
     ]
 # 'Urbano', 'Misto', 'Técnico', 'Rápido', 'Lento', 'Desafiador'
+
+# Escolha aleatória do circuito para a corrida
+def escolha_circuito():
+    circuito_escolhido = random.choice(circuito[1:])  # Ignora a linha de teste
+    return circuito_escolhido
+circuito_escolhido = escolha_circuito()

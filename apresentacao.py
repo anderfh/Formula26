@@ -2,6 +2,7 @@ import time
 import os
 import clima
 import circuito
+import Formula26
 
 # Função para limpar a tela
 def limpar_tela():
@@ -12,19 +13,19 @@ def titulo():
     print('=== Fórmula 26 🧙 ===')
 
 # Rodada
-rodada = 5
+rodada = 1
 
 # Clima
 clim = clima.clima
 
 # Circuito
-circuit = circuito.circuito[rodada][0]
-bandeira = circuito.circuito[rodada][1]
-tipo = circuito.circuito[rodada][2]
+circuit = Formula26.escolha_circuito[0]
+bandeira = Formula26.escolha_circuito[1]
+tipo = Formula26.escolha_circuito[2]
 
 # Apresenta a rodada
 def apresentar_rodada():
-    print(f'Rodada: {rodada}/24     {bandeira} {circuit}     {clim}     Circuíto {tipo}')
+    print(f'Rodada: {rodada}     {bandeira} {circuit}     {clim}     Circuíto {tipo}')
 
 # Função para apresentar o jogo
 def apresentacao():

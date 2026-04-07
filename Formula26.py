@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Jogo simples de corrida de cavalos para terminal (Português)."""
 
 import random
 import time
@@ -7,9 +6,12 @@ import os
 import clima
 import equipes
 import motores
+import mecanicas
+import pilotos
+import circuito
+import apresentacao
+import math
 
-TRACK_LENGTH = None  # Sem limite máximo de posições
-SLEEP_BETWEEN_TURNS = 10.0
 # Equipes:
 TEAMS = [equipe[0] for equipe in equipes.equipes]
 
@@ -17,45 +19,22 @@ TEAMS = [equipe[0] for equipe in equipes.equipes]
 ENGINES = {equipe[0]: motor[3] for equipe in equipes.equipes for motor in motores.motores if equipe[3] == motor[0]}
 
 # Mecânicas:
-MECHANICS = {'MER':6, 'WIL':6, 'MCL':6, 'FER':6, 'HAA':5, 'CAD':6, 'RED':5, 'RBV':5, 'AST':4, 'ALP':5, 'AUD':5, 'APX':6}
-MECHANIC_GROUPS = {
-    'MER': ['MER', 'WIL'],
-    'MCL': ['MCL', 'APX'],
-    'FER': ['FER', 'CAD'],
-    'TOY': ['HAA'],
-    'RED': ['RED', 'RBV'],
-    'AST': ['AST'],
-    'REN': ['ALP'],
-    'AUD': ['AUD'],
-}
+MECHANICS = {equipe[0]: mecanica[3] for equipe in equipes.equipes for mecanica in mecanicas.mecanicas if equipe[4] == mecanica[0]}
 
 # Aerodinâmica:
-AERO = {'MER':6, 'WIL':4, 'MCL':6, 'FER':6, 'HAA':5, 'CAD':4, 'RED':5, 'RBV':5, 'AST':4, 'ALP':5, 'AUD':4, 'APX':4}
-AERO_GROUPS = {time: [time] for time in TEAMS}
+AERO = {equipe[0]: equipe[5] for equipe in equipes.equipes}
 
 # Pilotos:
-DRIVER = {'MER':6, 'WIL':5, 'MCL':6, 'FER':6, 'HAA':5, 'CAD':5, 'RED':6, 'RBV':4, 'AST':6, 'ALP':5, 'AUD':4, 'APX':4}
-DRIVER_GROUPS = {
-    'CHAMPION': ['MER', 'MCL', 'FER', 'RED', 'AST'],
-    'WINNER': ['WIL', 'HAA', 'ALP', 'CAD'],
-    'NONE': ['RBV', 'AUD', 'APX'],
-}
+DRIVER = {equipe[0]: piloto[3] for equipe in equipes.equipes for piloto in pilotos.pilotos if equipe[6] == piloto[0]}
 
 # Pista Dominante:
-def pista_dominante():
-    pista = random.choice(['Urbano', 'Misto', 'Técnico', 'Rápido', 'Lento', 'Desafiador'])
-    return pista
-pista = pista_dominante()
+TRACK = {equipe[0]: equipe[7] for equipe in equipes.equipes}
 
-# Pista x Equipes:
-TRACK_GROUPS = {
-    'Urbano': ['FER', 'HAA'],
-    'Misto': ['RED', 'ALP'],
-    'Técnico': ['AUD', 'APX'],
-    'Rápido': ['MER', 'WIL'],
-    'Lento': ['MCL', 'CAD'],
-    'Desafiador': ['RBV', 'AST']
-}
+# escolha aleatória do circuito para a corrida
+escolha_circuito = circuito.circuito_escolhido
+
+# Tempo de espera entre as rodadas, baseado no número de voltas
+SLEEP_BETWEEN_TURNS = math.ceil(500 / escolha_circuito[3])
 
 def limpar_tela():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -91,10 +70,8 @@ def imprimir_pista(horses, turbo_flags=None, pilot_flags=None):
                 marcador = f' (-{diff})'
         print(f'  {rank:>2}. {TEAMS[idx]:>3} {linha}{marcador}')
 
-import apresentacao
-
 # Função para simular a corrida
-def simular_corrida(num_horses=5, max_rounds=52):
+def simular_corrida(num_horses=len(TEAMS), max_rounds= escolha_circuito[3]):
     horses = [0] * num_horses
     round_count = 0
 
@@ -117,7 +94,7 @@ def simular_corrida(num_horses=5, max_rounds=52):
                 sorte = random.random()
                 if clima.clima in ['☀️']:
                     if sorte < 0.5:
-                        if TEAMS[i] in TRACK_GROUPS[pista]:
+                        if TRACK[TEAMS[i]] in [escolha_circuito[2]]:  # Pista dominante
                             step = 8  # tiro rápido
                             turbo_flags[i] = True
                         else:
@@ -229,7 +206,6 @@ def main():
     print('''
 Regras:
 - Cada rodada, os carros avançam de 1 a 6 espaços (com chance de turbo extra).
-- A corrida dura 52 rodadas; o vencedor é quem estiver mais à frente no final.
 ''')
 
     num_horses = len(TEAMS)
@@ -251,10 +227,10 @@ Regras:
             input()
             limpar_tela()
             main()
-
+    
     apresentacao.apresentacao()
 
-    winner, final_positions, round_count = simular_corrida(num_horses, max_rounds=12)
+    winner, final_positions, round_count = simular_corrida(num_horses, max_rounds= escolha_circuito[3])
 
     # Classificar top 6 posições
     ranked = sorted(enumerate(final_positions), key=lambda x: x[1], reverse=True)
@@ -281,11 +257,11 @@ Regras:
         print('Digite s ou n.')
 
     if novo == 's':
+        apresentacao.rodada += 1
         limpar_tela()
         main()
     else:
         print('Obrigado por jogar! Até a próxima.')
-
 
 if __name__ == '__main__':
     main()

@@ -5,21 +5,16 @@ import random
 import time
 import os
 import clima
+import equipes
+import motores
 
 TRACK_LENGTH = None  # Sem limite máximo de posições
 SLEEP_BETWEEN_TURNS = 10.0
 # Equipes:
-TEAMS = ['MER', 'FER', 'RED', 'MCL', 'AST', 'ALP', 'WIL', 'HAA', 'AUD', 'RBV', 'CAD', 'APX']
+TEAMS = [equipe[0] for equipe in equipes.equipes]
 
 # Motores:
-ENGINES = {'MER':6, 'WIL':6, 'MCL':6, 'FER':6, 'HAA':6, 'CAD':6, 'RED':5, 'RBV':5, 'AST':3, 'ALP':3, 'AUD':4, 'APX':4}
-ENGINE_GROUPS = {
-    'MER': ['MER', 'WIL', 'MCL'],
-    'FER': ['FER', 'HAA', 'CAD'],
-    'FOR': ['RED', 'RBV'],
-    'HON': ['AST', 'ALP'],
-    'POR': ['AUD', 'APX'],
-}
+ENGINES = {equipe[0]: motor[3] for equipe in equipes.equipes for motor in motores.motores if equipe[3] == motor[0]}
 
 # Mecânicas:
 MECHANICS = {'MER':6, 'WIL':6, 'MCL':6, 'FER':6, 'HAA':5, 'CAD':6, 'RED':5, 'RBV':5, 'AST':4, 'ALP':5, 'AUD':5, 'APX':6}
@@ -96,21 +91,6 @@ def imprimir_pista(horses, turbo_flags=None, pilot_flags=None):
                 marcador = f' (-{diff})'
         print(f'  {rank:>2}. {TEAMS[idx]:>3} {linha}{marcador}')
 
-# Função para escolher a aposta do jogador
-def escolher_aposta(num_horses):
-    print("Equipes disponíveis:")
-    for i, team in enumerate(TEAMS):
-        print(f"  {i+1}. {team}")
-    while True:
-        escolha = input("Escolha uma equipe (digite o número): ").strip()
-        if not escolha.isdigit():
-            print('Por favor digite um número válido.')
-            continue
-        escolha = int(escolha)
-        if 1 <= escolha <= num_horses:
-            return escolha - 1
-        print(f'Escolha entre 1 e {num_horses}.')
-
 import apresentacao
 
 # Função para simular a corrida
@@ -135,7 +115,7 @@ def simular_corrida(num_horses=5, max_rounds=52):
                 step = DRIVER[TEAMS[i]]
             elif step == 1:
                 sorte = random.random()
-                if clima in ['☀️']:
+                if clima.clima in ['☀️']:
                     if sorte < 0.5:
                         if TEAMS[i] in TRACK_GROUPS[pista]:
                             step = 8  # tiro rápido
@@ -147,13 +127,13 @@ def simular_corrida(num_horses=5, max_rounds=52):
                     else:
                         step = 3
                         pilot_flags[i] = True
-                elif clima in ['🌧️']:
+                elif clima.clima in ['🌧️']:
                     if sorte < 0.7:
                         step = 6
                     else:
                         step = 3
                         pilot_flags[i] = True
-                elif clima in ['⛈️']:
+                elif clima.clima in ['⛈️']:
                     if sorte < 0.35:
                         step = 6
                     else:
@@ -245,18 +225,15 @@ def configurar_grupo(param_dict, group_dict, nome):
 # Função principal do jogo
 def main():
     limpar_tela()
-    print('Bem-vindo(a) à Corrida de Fórmula 1!')
+    print('Bem-vindo(a) à Corrida de Fórmula 26!')
     print('''
 Regras:
-- Você escolhe uma equipe para apostar.
 - Cada rodada, os carros avançam de 1 a 6 espaços (com chance de turbo extra).
 - A corrida dura 52 rodadas; o vencedor é quem estiver mais à frente no final.
 ''')
 
     num_horses = len(TEAMS)
     print(f'Número de equipes: {num_horses}.')
-    aposta = len(TEAMS) - 1  # Sempre aposta em APX (última equipe)
-    print(f'Aposta automática na equipe {TEAMS[aposta]}.')
 
     print("\nMENU INICIAL:")
     print("DIGITE 'J' PARA INICIAR A CORRIDA")
@@ -277,7 +254,7 @@ Regras:
 
     apresentacao.apresentacao()
 
-    winner, final_positions, round_count = simular_corrida(num_horses, max_rounds=52)
+    winner, final_positions, round_count = simular_corrida(num_horses, max_rounds=12)
 
     # Classificar top 6 posições
     ranked = sorted(enumerate(final_positions), key=lambda x: x[1], reverse=True)
@@ -296,14 +273,9 @@ Regras:
     print(f'4º lugar: {TEAMS[fourth]} (4 pontos)')
     print(f'5º lugar: {TEAMS[fifth]} (2 pontos)')
     print(f'6º lugar: {TEAMS[sixth]} (1 pontos)')
-    
-    if aposta == first:
-        print('\n🎉 Parabéns! Sua aposta ganhou!')
-    else:
-        print(f'\n😞 Você apostou na equipe {TEAMS[aposta]}. Mais sorte na próxima!')
-
+   
     while True:
-        novo = input('Deseja jogar outra vez? (s/n): ').strip().lower()
+        novo = input('\nDeseja jogar outra vez? (s/n): ').strip().lower()
         if novo in ('s', 'n'):
             break
         print('Digite s ou n.')

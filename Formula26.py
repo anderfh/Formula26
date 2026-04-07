@@ -258,6 +258,8 @@ Regras:
 
     if novo == 's':
         apresentacao.rodada += 1
+        clima.clima = clima.gerar_clima()  # Gera novo clima para a próxima corrida
+        circuito.circuito_escolhido = circuito.escolher_circuito()  # Escolhe novo circuito para a próxima corrida
         limpar_tela()
         main()
     else:
